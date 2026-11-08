@@ -1,0 +1,21 @@
+{
+  "name": "mailchimp-mcp",
+  "version": "0.2.0",
+  "description": "Inspect audiences and their members before explicitly requesting double opt-in for a consenting subscriber.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "mailchimp-mcp": "server.mjs"
+  },
+  "scripts": {
+    "start": "node example.mjs",
+    "server": "node server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0"
+  }
+}
