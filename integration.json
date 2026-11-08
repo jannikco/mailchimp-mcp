@@ -2,361 +2,60 @@
   "schemaVersion": 1,
   "id": "mailchimp-mcp",
   "kind": "provider-connector",
-  "artifactType": "connector",
-  "qualityVersion": 2,
+  "product": "pipmcp",
   "title": "Mailchimp MCP server",
-  "description": "Inspect audiences and their members before explicitly requesting double opt-in for a consenting subscriber.",
+  "description": "Use Mailchimp with AI agents through one PipMCP API key, actual hosted schemas and governed execution.",
   "status": "ready",
   "verification": "mock-only",
   "releaseEligible": true,
+  "operationIds": [],
   "maintainer": "jannikco",
   "license": "MIT",
-  "product": "pipmcp",
-  "appSlug": "mailchimp",
-  "appName": "Mailchimp",
-  "operationIds": [
-    "mailchimp_list_audiences",
-    "mailchimp_list_members",
-    "mailchimp_add_pending_member"
-  ],
-  "sourceRevision": "8962b6d82546e083c1fa1a28853d1e43af409b08404c69b53fbd7e761963bc92",
+  "attributionSlug": "github-mailchimp-mcp",
+  "sourceRevision": "a373682af97d30ab0797cb8ab1d7e8b40b50ec448620d4a2a9be8a53d477649b",
+  "qualityVersion": 2,
+  "artifactType": "connector",
   "evidence": [
-    "Actual tools/call and direct-provider request contract tests"
+    "Gateway HTTP transport fixtures",
+    "Generated stdio wrapper discovery/call fixtures"
   ],
   "provenance": [
     "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json",
     "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Members/Collection.json"
   ],
-  "attributionSlug": "github-mailchimp-mcp",
-  "connectorId": "mailchimp",
-  "connector": {
-    "id": "mailchimp",
-    "name": "Mailchimp",
-    "version": "0.1.0",
-    "baseUrl": "https://{MAILCHIMP_DC}.api.mailchimp.com/3.0",
-    "auth": {
-      "type": "basic",
-      "usernameEnv": "MAILCHIMP_USERNAME",
-      "passwordEnv": "MAILCHIMP_API_KEY"
-    },
-    "tools": [
-      {
-        "name": "mailchimp_list_audiences",
-        "description": "List one page of audiences.",
-        "method": "GET",
-        "path": "/lists",
-        "readOnly": true,
-        "approvalRequired": false,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "count": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            },
-            "offset": {
-              "type": "integer",
-              "minimum": 0
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [],
-          "query": {
-            "count": "count",
-            "offset": "offset"
-          },
-          "body": {}
-        },
-        "sampleArguments": {
-          "count": 10
-        },
-        "evidence": {
-          "state": "documented",
-          "providerLiveValidation": "not-run"
-        },
-        "provenance": [
-          "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json",
-          "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Members/Collection.json"
-        ]
-      },
-      {
-        "name": "mailchimp_list_members",
-        "description": "List members in one authorized audience.",
-        "method": "GET",
-        "path": "/lists/{list_id}/members",
-        "readOnly": true,
-        "approvalRequired": false,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "list_id": {
-              "type": "string",
-              "minLength": 1
-            },
-            "count": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
-          },
-          "required": [
-            "list_id"
-          ],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [
-            "list_id"
-          ],
-          "query": {
-            "count": "count"
-          },
-          "body": {}
-        },
-        "sampleArguments": {
-          "list_id": "REPLACE_WITH_AUDIENCE_ID",
-          "count": 10
-        },
-        "evidence": {
-          "state": "documented",
-          "providerLiveValidation": "not-run"
-        },
-        "provenance": [
-          "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json",
-          "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Members/Collection.json"
-        ]
-      },
-      {
-        "name": "mailchimp_add_pending_member",
-        "description": "Add a consenting subscriber with pending status, triggering Mailchimp double opt-in confirmation.",
-        "method": "POST",
-        "path": "/lists/{list_id}/members",
-        "readOnly": false,
-        "approvalRequired": true,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "list_id": {
-              "type": "string",
-              "minLength": 1
-            },
-            "email_address": {
-              "type": "string",
-              "format": "email"
-            }
-          },
-          "required": [
-            "list_id",
-            "email_address"
-          ],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [
-            "list_id"
-          ],
-          "query": {},
-          "body": {
-            "email_address": "email_address"
-          }
-        },
-        "sampleArguments": {
-          "list_id": "REPLACE_WITH_AUDIENCE_ID",
-          "email_address": "sandbox@example.com"
-        },
-        "evidence": {
-          "state": "documented",
-          "providerLiveValidation": "not-run"
-        },
-        "body": {
-          "status": "pending"
-        },
-        "provenance": [
-          "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json",
-          "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Members/Collection.json"
-        ]
-      }
-    ],
-    "workflow": {
-      "name": "Mailchimp authorized workflow",
-      "description": "Inspect audiences and their members before explicitly requesting double opt-in for a consenting subscriber.",
-      "steps": [
-        "mailchimp_list_audiences",
-        "mailchimp_list_members",
-        "mailchimp_add_pending_member"
-      ]
-    },
-    "provenance": [
-      "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json",
-      "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Members/Collection.json"
-    ],
-    "sourceEvidence": {
-      "state": "documented",
-      "providerLiveValidation": "not-run",
-      "checkedAt": "2026-11-08",
-      "operationCount": 3,
-      "kind": "official-reference",
-      "sha256": "4416c1a24bca59c8ffafa17ea7b7fa9356babb7ba929c52e7858bcc11b657ddd",
-      "sources": [
-        {
-          "url": "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json",
-          "sha256": "4416c1a24bca59c8ffafa17ea7b7fa9356babb7ba929c52e7858bcc11b657ddd",
-          "checkedAt": "2026-11-08T13:12:59.962516+00:00"
-        },
-        {
-          "url": "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Members/Collection.json",
-          "sha256": "77db77c17db6c47de9c0ec159ac956c77bb2abd0f6c61f489bac3f1f746f35ec",
-          "checkedAt": "2026-11-08T13:12:59.983495+00:00"
-        }
-      ]
-    },
-    "setup": {
-      "requiresPipMcpAccount": false,
-      "credentialsHelpUrl": "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json",
-      "instructions": "MAILCHIMP_DC is the data-center suffix of your own API key, e.g. us22. Set MAILCHIMP_USERNAME to any nonempty label and MAILCHIMP_API_KEY to your key. Add members only with the required consent. Pending status may send a confirmation email; provider audience requirements remain in force."
-    },
-    "sampleWarning": "Example IDs and email addresses are placeholders. Replace them with records and recipients you are authorized to access. Samples do not authorize writes. HTTP/fixture success does not prove provider execution or email delivery.",
-    "allowedHostSuffixes": [
-      "api.mailchimp.com"
-    ],
-    "appSlug": "mailchimp",
-    "repoId": "mailchimp-mcp",
-    "product": "pipmcp",
-    "artifactType": "connector",
-    "sourceRevision": "8962b6d82546e083c1fa1a28853d1e43af409b08404c69b53fbd7e761963bc92",
-    "capabilityEvidence": {
-      "local": {
-        "level": "Tested",
-        "operations": [
-          {
-            "name": "mailchimp_list_audiences",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          },
-          {
-            "name": "mailchimp_list_members",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          },
-          {
-            "name": "mailchimp_add_pending_member",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          }
-        ],
-        "evidenceRefs": [
-          "Provider request/stdio contract tests"
-        ],
-        "mode": "local"
-      },
-      "managed": {
-        "level": "Documented",
-        "operations": [
-          {
-            "name": "mailchimp_list_audiences",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          },
-          {
-            "name": "mailchimp_list_members",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          },
-          {
-            "name": "mailchimp_add_pending_member",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          }
-        ],
-        "evidenceRefs": [],
-        "mode": "managed"
-      }
-    },
-    "managedAvailability": {
-      "status": "import-required",
-      "integration": "openapi-to-mcp",
-      "checkedAt": "2026-11-08T13:20:45.156456+00:00"
-    }
+  "utility": {
+    "problem": "Inspect audiences and their members before explicitly requesting double opt-in for a consenting subscriber.",
+    "output": "Actual hosted tool schemas and durable governed execution receipts"
   },
+  "appSlug": "mailchimp",
+  "appName": "Mailchimp",
+  "connectorId": "mailchimp",
+  "executionAuthority": "pipmcp-gateway",
+  "version": "1.0.0",
+  "agentReady": true,
   "capabilityEvidence": {
     "local": {
       "level": "Tested",
       "operations": [
         {
-          "name": "mailchimp_list_audiences",
+          "name": "gateway_transport",
           "level": "Tested",
+          "method": "contract-fixture",
           "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
-        },
-        {
-          "name": "mailchimp_list_members",
-          "level": "Tested",
-          "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
-        },
-        {
-          "name": "mailchimp_add_pending_member",
-          "level": "Tested",
-          "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
+            "Generated gateway/stdio fixtures"
+          ]
         }
       ],
       "evidenceRefs": [
-        "Provider request/stdio contract tests"
+        "Generated gateway/stdio fixtures"
       ],
       "mode": "local"
     },
     "managed": {
       "level": "Documented",
-      "operations": [
-        {
-          "name": "mailchimp_list_audiences",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        },
-        {
-          "name": "mailchimp_list_members",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        },
-        {
-          "name": "mailchimp_add_pending_member",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        }
-      ],
+      "operations": [],
       "evidenceRefs": [],
       "mode": "managed"
     }
-  },
-  "utility": {
-    "problem": "Inspect audiences and their members before explicitly requesting double opt-in for a consenting subscriber.",
-    "output": "Actual provider API results through local MCP tools"
-  },
-  "providerDocs": "https://us22.api.mailchimp.com/schema/3.0/Paths/Lists/Collection.json"
+  }
 }

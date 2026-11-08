@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-mailchimp",
+      "description": "Connect AI agents to Mailchimp using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-mailchimp/SKILL.md": "3fe133491ca0539c43b407656c9126d08c95994496c92f387a9a3638ea64bc5b"
+  }
+}
